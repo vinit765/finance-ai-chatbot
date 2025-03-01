@@ -6,27 +6,27 @@ function sendMessage() {
     let message = userInput.value.trim();
     if (message === "") return;
 
-    // Add user message with avatar
+   
     addMessage("🧑‍💼 You", message, "user-message", "user-avatar.png");
 
-    // Show typing animation
+    
     showTypingAnimation();
 
-    // Send message to server
+    
     socket.emit("user_message", { message });
 
-    // Clear input field
+    
     userInput.value = "";
 }
 
-// Listen for bot responses
+
 socket.on("bot_response", (data) => {
     removeTypingAnimation();
     let structuredResponse = formatResponse(data.message);
     addMessage("🤖 Bot", structuredResponse, "bot-message", "bot-avatar.png");
 });
 
-// Function to add messages to chatbox
+
 function addMessage(sender, text, className, avatar) {
     let messageDiv = document.createElement("div");
     messageDiv.classList.add(className);
@@ -46,14 +46,14 @@ function addMessage(sender, text, className, avatar) {
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// Function to structure AI responses
+
 function formatResponse(response) {
     response = response.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
     response = response.replace(/\n/g, "<br>");
     return response;
 }
 
-// Show typing animation
+
 function showTypingAnimation() {
     let typingDiv = document.createElement("div");
     typingDiv.classList.add("bot-message", "typing");
@@ -63,7 +63,7 @@ function showTypingAnimation() {
     chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// Remove typing animation when bot responds
+
 function removeTypingAnimation() {
     let typingDiv = document.getElementById("typing-animation");
     if (typingDiv) {
@@ -71,7 +71,7 @@ function removeTypingAnimation() {
     }
 }
 
-// Allow sending messages with Enter key
+
 userInput.addEventListener("keypress", (event) => {
     if (event.key === "Enter") sendMessage();
 });

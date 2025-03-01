@@ -4,15 +4,16 @@ import google.generativeai as genai
 import yfinance as yf
 import re
 
-# Configure Flask & SocketIO
+
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
 
-# Configure Gemini API
+# Configure API key
+
 genai.configure(api_key="your_actual_gemini_api_key_here")
 MODEL_NAME = "gemini-2.0-flash"
 
-# Function to get Gemini AI response
+
 def gemini_finance_chatbot(prompt):
     model = genai.GenerativeModel(MODEL_NAME)
     try:
@@ -21,7 +22,7 @@ def gemini_finance_chatbot(prompt):
     except Exception as e:
         return f"Error: {e}"
 
-# Function to fetch stock prices
+
 def get_stock_price(ticker):
     try:
         stock = yf.Ticker(ticker)
@@ -33,23 +34,23 @@ def get_stock_price(ticker):
     except Exception as e:
         return f"Error fetching stock price: {e}"
 
-# Extract ticker symbol from user input
+
 def extract_ticker(user_input):
-    possible_tickers = re.findall(r"\b[A-Z]{2,5}\b", user_input)  # Extract capitalized words (potential tickers)
+    possible_tickers = re.findall(r"\b[A-Z]{2,5}\b", user_input)  
     for ticker in possible_tickers:
         stock = yf.Ticker(ticker)
-        if stock.history(period="1d").empty is False:  # Validate ticker
+        if stock.history(period="1d").empty is False:  
             return ticker
     return None
 
-# WebSocket event handler for real-time chat
+
 @socketio.on("user_message")
 def handle_message(data):
-    user_input = data["message"]  # Don't convert to lowercase to preserve tickers
+    user_input = data["message"]  
 
-    # Check if the user is asking for a stock price
+    
     if "stock price" in user_input.lower() or "actual price of" in user_input.lower():
-        ticker = extract_ticker(user_input)  # Extract ticker properly
+        ticker = extract_ticker(user_input)  
 
         if ticker:
             response = get_stock_price(ticker)
@@ -57,15 +58,15 @@ def handle_message(data):
             response = "I couldn't detect a valid stock ticker. Please provide a symbol like **AAPL** or **NVDA**."
     
     else:
-        response = gemini_finance_chatbot(user_input)  # Default to Gemini AI
+        response = gemini_finance_chatbot(user_input)  
 
-    emit("bot_response", {"message": response})  # Send response back to frontend
+    emit("bot_response", {"message": response})  
 
-# Route to serve the frontend
+
 @app.route("/")
 def index():
     return render_template("index.html")
 
-# Run the Flask app
+
 if __name__ == "__main__":
     socketio.run(app, debug=True)
