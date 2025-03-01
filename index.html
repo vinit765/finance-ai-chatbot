@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance AI Chatbot 💰</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.js"></script>
+</head>
+<body>
+    <div class="chat-container">
+        <header>
+            <h2>💰 Finance AI Chatbot</h2>
+        </header>
+
+        <div class="chat-box" id="chat-box">
+            <div class="bot-message">
+                <img src="bot-avatar.png" class="avatar">
+                <div class="message-content">Hello! 👋 Ask me about stocks, trends, or finance! 📈</div>
+            </div>
+        </div>
+
+        <div class="input-container">
+            <input type="text" id="user-input" placeholder="Ask me anything... 💬">
+            <button onclick="sendMessage()">🚀</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
